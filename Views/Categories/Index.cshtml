@@ -31,7 +31,7 @@ else
                 <td>@c.Name</td>
                 <td>@c.Kind</td>
                 <td class="text-end">
-                    @if (User.IsInRole(Roles.Organiser) && isOwner)
+                    @if (User.IsInRole("Organiser") && isOwner)
                     {
                         <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">Edit</a>
                         <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-sm btn-outline-danger">Delete</a>
