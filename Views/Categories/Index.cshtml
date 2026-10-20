@@ -1,4 +1,4 @@
-﻿@using RaceDay.Models
+@using RaceDay.Models
 @model IEnumerable<Category>
 @{
     var ev = (Event)ViewBag.Event;
@@ -10,7 +10,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0">Categories: @ev.Name</h1>
-    @if (User.IsInRole("Organiser") && isOwner)
+    @if (User.IsInRole(Roles.Organiser) && isOwner)
     {
         <a asp-action="Create" asp-route-eventId="@ev.Id" class="btn btn-primary">Add category</a>
     }
@@ -31,7 +31,7 @@ else
                 <td>@c.Name</td>
                 <td>@c.Kind</td>
                 <td class="text-end">
-                    @if (User.IsInRole("Organiser") && isOwner)
+                    @if (User.IsInRole(Roles.Organiser) && isOwner)
                     {
                         <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">Edit</a>
                         <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-sm btn-outline-danger">Delete</a>
