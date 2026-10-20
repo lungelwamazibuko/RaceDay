@@ -8,11 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.32" />
+    <PackageReference Include="Moq" Version="4.21.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
+    <PackageReference Include="TestEssentials.Xunit" Version="2.1.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.analyzers" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.assert" Version="2.9.3" />
+    <PackageReference Include="xunit.assert.source" Version="2.9.3" />
+    <PackageReference Include="xunit.core" Version="2.9.3" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
+    <PackageReference Include="xunit.v3.assert" Version="4.0.2" />
   </ItemGroup>
 
 </Project>
