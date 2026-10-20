@@ -1,0 +1,15 @@
+@model RaceDay.Models.Event
+@{ ViewData["Title"] = "Create event"; }
+
+<h1 class="h3">Create event</h1>
+<hr />
+<div class="row"><div class="col-lg-8">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <partial name="_EventForm" model="Model" />
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div></div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
