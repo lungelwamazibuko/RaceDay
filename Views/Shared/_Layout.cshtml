@@ -34,6 +34,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Events" asp-action="Index">Events</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Results" asp-action="Capture">Capture Results</a>
+                            </li>
 
                             }
                             else if (User.IsInRole("Participant"))
@@ -45,6 +48,9 @@
                                 <a class="nav-link text-dark" asp-controller="Enrolments" asp-action="Create">Signup</a>
                             </li>
                             }
+                          @if (User.IsInRole("Organiser"))
+                            {
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
