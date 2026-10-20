@@ -1,4 +1,4 @@
-namespace RunWayy.Models;
+namespace RaceDay.Models;
 
 public static class Roles
 {
