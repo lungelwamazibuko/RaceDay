@@ -1,18 +1,20 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RaceDay.Models;
+using System.Diagnostics;
 
 namespace RaceDay.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public IActionResult AdminDashboard()
         {
-            _logger = logger;
+            return View();
         }
 
+        public IActionResult OrganiserDashboard()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             return View();
