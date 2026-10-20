@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Data;
+using RaceDay.Models.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-// builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
+builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
