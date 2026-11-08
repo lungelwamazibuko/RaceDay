@@ -3,7 +3,7 @@
     public record BlobUploadResult(string BlobName, string Url);
     public interface IBlobStorageService
     {
-        string? validate(IFormFile file);
+        string? Validate(IFormFile file);
 
         Task<BlobUploadResult> UploadFileAsync(IFormFile file,  CancellationToken ct = default);
 
