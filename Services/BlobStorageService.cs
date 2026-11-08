@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace RaceDay.Services
 {
@@ -80,7 +81,7 @@ namespace RaceDay.Services
         public async Task DeleteAsync(string? blobName, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(blobName)) return;
-            await _container.DeleteIfExistsAsync(blobName, cancellationToken: ct);
+            await _container.DeleteBlobIfExistsAsync(blobName, cancellationToken: ct);
         }
     }
 }
