@@ -64,8 +64,12 @@ public class CategoriesController : Controller
 
         _db.Add(category);
         await _db.SaveChangesAsync();
+
         TempData["Success"] = "Category added.";
-        return RedirectToAction(nameof(Index), new { eventId = category.EventId });
+
+        return RedirectToAction(
+            nameof(Index),
+            new { eventId = category.EventId });
     }
     [Authorize(Roles = "Admin,Organiser")]
     public async Task<IActionResult> Edit(int? id)

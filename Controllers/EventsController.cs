@@ -18,7 +18,7 @@ public class EventsController : Controller
 
 
     public EventsController(ApplicationDbContext db, UserManager<ApplicationUser> users, IBlobStorageService blobs)
-    {
+    { 
         _db = db;
         _users = users;
         _blobs = blobs;
@@ -39,19 +39,27 @@ public class EventsController : Controller
     // Both roles
     public async Task<IActionResult> Details(int? id)
     {
-        if (id == null) return NotFound();
+        if (id == null)
+        {
+            return NotFound();
+        }
 
         var ev = await _db.Events
+            .AsNoTracking()
             .Include(e => e.Organiser)
             .Include(e => e.Categories)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.Id == id);
-        if (ev == null) return NotFound();
+            .SingleOrDefaultAsync(e => e.Id == id.Value);
 
-        var userId = _users.GetUserId(User);
-        ViewBag.IsOwner = ev.OrganiserId == userId;
+        if (ev == null)
+        {
+            return NotFound();
+        }
+
+        ViewBag.IsOwner = ev.OrganiserId == _users.GetUserId(User);
         ViewBag.IsEnrolled = await _db.Enrolments
-            .AnyAsync(en => en.EventId == ev.Id && en.ParticipantId == userId);
+            .AnyAsync(en =>
+                en.EventId == ev.Id &&
+                en.ParticipantId == _users.GetUserId(User));
 
         return View(ev);
     }
@@ -94,7 +102,11 @@ public class EventsController : Controller
             throw;
         }
         TempData["Success"] = "Event created.";
-        return RedirectToAction("Index", "Categories",  new { id = ev.Id });
+
+        return RedirectToAction(
+            nameof(CategoriesController.Index),
+            "Categories",
+            new { eventId = ev.Id });
     }
 
     [Authorize(Roles = "Admin,Organiser")]
