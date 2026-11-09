@@ -3,33 +3,35 @@
 
 <h1 class="h3">Create event</h1>
 <hr />
-<div class="row"><div class="col-lg-8">
-    <form asp-action="Create" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <partial name="_EventForm" model="Model" />
-        <div class="mb-3">
-        <label for="bannerFile" class="form-label">Banner image</label>
-        @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
-        {
-            <div class="mb-2">
-                <img src="@Url.Content(Model.BannerImageUrl)" alt="Current banner" class="img-thumbnail" style="max-height:140px" />
+<div class="row">
+    <div class="col-lg-8">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <partial name="_EventForm" model="Model" />
+            <div class="mb-3">
+            <label for="bannerFile" class="form-label">Banner image</label>
+            @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
+            {
+                <div class="mb-2">
+                    <img src="@Url.Content(Model.BannerImageUrl)" alt="Current banner" class="img-thumbnail" style="max-height:140px" />
+                </div>
+                <div class ="form-check mb-2">
+                    <input for="removeBanner" class="form-check-input" type="checkbox" name="removeBanner" value="true" />
+                    <label or="removeBanner" class="form-check-label">Remove current banner</label>
+                </div>
+            }
+            <input for="bannerFile" class="form-control" type="file" id="bannerFile" name="bannerFile" accept="image/*" />
+            <div class="form-text">Choosing a new files replaces the current banner.</div>
+                @Html.ValidationMessage("bannerFile", new { @class = "text-danger" })
             </div>
-            <div class ="form-check mb-2">
-                <input for="removeBanner" class="form-check-input" type="checkbox" name="removeBanner" value="true" />
-                <label or="removeBanner" class="form-check-label">Remove current banner</label>
-            </div>
-        }
-        <input for="bannerFile" class="form-control" type="file" id="bannerFile" name="bannerFile" accept="image/*" />
-        <div class="form-text">Choosing a new files replaces the current banner.</div>
-            @Html.ValidationMessage("bannerFile", new { @class = "text-danger" })
-        </div>
-        @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
-        {
-                <img src="@Model.BannerImageUrl" alt="Banner for @Model.Name" class="img-fluid w-100 mb-3" style="max-height:320px;object-fit:cover" />
-        }
-        <button type="submit" class="btn btn-primary">Create</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
-    </form>
-</div></div>
+            @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
+            {
+                    <img src="@Model.BannerImageUrl" alt="Banner for @Model.Name" class="img-fluid w-100 mb-3" style="max-height:320px;object-fit:cover" />
+            }
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
 
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }
