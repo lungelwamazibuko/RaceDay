@@ -1,71 +1,227 @@
-@using RaceDay.Models
+﻿@using RaceDay.Models
 @model Event
+
 @{
     ViewData["Title"] = Model.Name;
     bool isOwner = ViewBag.IsOwner == true;
     bool isEnrolled = ViewBag.IsEnrolled == true;
-} 
+}
 
 <partial name="_Alerts" />
 
-<h1 class="h3">@Model.Name</h1>
-@if (!string.IsNullOrEmpty(Model.BannerImageUrl))
-{
-    <img src="@Model.BannerImageUrl" alt="Banner for @Model.Name" class="img-fluid w-100 mb-3" 
-    style="max-height:320px;object-fit:cover" />
-}
+<div class="event-details-page">
 
+    <div class="event-back-link">
+        <a asp-action="Index">← Back to events</a>
+    </div>
 
-<p class="text-muted">@Model.EventType &middot; @Model.DistanceKm.ToString("0.##") km</p>
-
-<dl class="row">
-    <dt class="col-sm-2">Description</dt>
-    <dd class="col-sm-10">@Model.Description</dd>
-    <dt class="col-sm-2">Date</dt>
-    <dd class="col-sm-10">@Model.Date.ToString("dddd, d MMMM yyyy HH:mm")</dd>
-    <dt class="col-sm-2">Location</dt>
-    <dd class="col-sm-10">@Model.Location</dd>
-    <dt class="col-sm-2">Organiser</dt>
-    <dd class="col-sm-10">@Model.Organiser?.FirstName @Model.Organiser?.LastName</dd>
-    <dt class="col-sm-2">Categories</dt>
-    <dd class="col-sm-10">
-        @if (Model.Categories.Any())
+    <section class="event-hero">
+        @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
         {
-            @foreach (var c in Model.Categories
-                .OrderBy(c => c.Kind)
-                .ThenBy(c => c.Name))
-            {
-                <span class="me-2">@c.Name</span>
-            }
+            <img src="@Model.BannerImageUrl" alt="Banner for @Model.Name" class="event-hero-image" />
         }
         else
         {
-            <span class="text-muted">None yet</span>
+            <div class="event-hero-placeholder">
+                <span>RACEDAY EVENT</span>
+                <h1>@Model.Name</h1>
+            </div>
         }
-    </dd>
-</dl>
+        <div class="event-hero-overlay">
+            <span class="event-type-label">@Model.EventType</span>
+            <h1>@Model.Name</h1>
+            <p>@Model.Location</p>
+        </div>
+    </section>
 
-<div class="d-flex flex-wrap gap-2">
-    <a asp-action="Index" class="btn btn-outline-secondary">Back to events</a>
-    <a asp-controller="Categories" asp-action="Index" asp-route-eventId="@Model.Id" class="btn btn-outline-secondary">View categories</a>
+    <div class="event-details-grid">
 
-    @if (User.IsInRole("Participant"))
-    {
-        @if (isEnrolled)
-        {
-            <a asp-controller="Enrolments" asp-action="My" class="btn btn-success">You're enrolled</a>
-        }
-        else if (Model.Date > DateTime.Now && Model.Categories.Any())
-        {
-            <a asp-controller="Enrolments" asp-action="Create" asp-route-eventId="@Model.Id" class="btn btn-primary">Enter this event</a>
-        }
-    }
+        <main class="event-main-content">
 
-    @if (User.IsInRole("Organiser") && isOwner)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
-        <a asp-controller="Enrolments" asp-action="ForEvent" asp-route-eventId="@Model.Id" class="btn btn-outline-primary">View enrolments</a>
-        <a asp-controller="Results" asp-action="Capture" asp-route-eventId="@Model.Id" class="btn btn-outline-primary">Capture results</a>
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
-    }
+            <section class="event-section">
+                <div class="event-section-heading">
+                    <div>
+                        <span class="event-eyebrow">ABOUT THE EVENT</span>
+                        <h2>Event overview</h2>
+                    </div>
+                </div>
+                <p class="event-description">
+                    @(string.IsNullOrWhiteSpace(Model.Description)
+                                        ? "No event description has been provided."
+                                        : Model.Description)
+                </p>
+            </section>
+
+            <section class="event-section">
+                <div class="event-section-heading">
+                    <div>
+                        <span class="event-eyebrow">EVENT INFORMATION</span>
+                        <h2>Race details</h2>
+                    </div>
+                </div>
+
+                <div class="event-information-grid">
+                    <div class="event-information-card">
+                        <span class="event-info-icon">📅</span>
+                        <div>
+                            <span class="event-info-label">Date and time</span>
+                            <strong>@Model.Date.ToString("dddd, d MMMM yyyy")</strong>
+                            <span class="event-info-secondary">@Model.Date.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+
+                    <div class="event-information-card">
+                        <span class="event-info-icon">📍</span>
+                        <div>
+                            <span class="event-info-label">Location</span>
+                            <strong>@Model.Location</strong>
+                        </div>
+                    </div>
+
+                    <div class="event-information-card">
+                        <span class="event-info-icon">🏃</span>
+                        <div>
+                            <span class="event-info-label">Distance</span>
+                            <strong>@Model.DistanceKm.ToString("0.##") km</strong>
+                        </div>
+                    </div>
+
+                    <div class="event-information-card">
+                        <span class="event-info-icon">🏁</span>
+                        <div>
+                            <span class="event-info-label">Event type</span>
+                            <strong>@Model.EventType</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="event-section">
+                <div class="event-section-heading">
+                    <div>
+                        <span class="event-eyebrow">PARTICIPATION</span>
+                        <h2>Available categories</h2>
+                    </div>
+                    <span class="event-category-count">@Model.Categories.Count categories</span>
+                </div>
+
+                @if (Model.Categories.Any())
+                {
+                    <div class="event-category-list">
+                        @foreach (var c in Model.Categories
+                                            .OrderBy(c => c.Kind)
+                                            .ThenBy(c => c.Name))
+                        {
+                            <div class="event-category-tag">
+                                <span>@c.Name</span>
+                                <span class="category-kind">@c.Kind</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="event-empty-message">No categories have been added to this event yet.</p>
+                }
+
+                <a asp-controller="Categories"
+                   asp-action="Index"
+                   asp-route-eventId="@Model.Id"
+                   class="event-secondary-link">
+                    View all categories →
+                </a>
+            </section>
+
+        </main>
+
+        <aside class="event-sidebar">
+
+            <div class="event-action-card">
+                <span class="event-eyebrow">EVENT REGISTRATION</span>
+
+                @if (User.IsInRole("Participant"))
+                {
+                    @if (isEnrolled)
+                    {
+                        <div class="event-status enrolled">
+                            <span>✓</span>
+                            <div>
+                                <strong>You're enrolled</strong>
+                                <p>Your event registration is confirmed.</p>
+                            </div>
+                        </div>
+
+                        <a asp-controller="Enrolments" asp-action="My"
+                           class="event-primary-button">
+                            My registrations
+                        </a>
+                    }
+                    else if (Model.Date > DateTime.Now && Model.Categories.Any())
+                    {
+                        <p>Ready to take part? Register for this event and select your category.</p>
+
+                        <a asp-controller="Enrolments"
+                           asp-action="Create"
+                           asp-route-eventId="@Model.Id"
+                           class="event-primary-button">
+                            Enter this event →
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="event-status unavailable">
+                            <strong>Registration unavailable</strong>
+                            <p>This event has passed or has no available categories.</p>
+                        </div>
+                    }
+                }
+                else if (User.IsInRole("Organiser") && isOwner)
+                {
+                    <p>Manage your event, review participant registrations and capture race results.</p>
+
+                    <a asp-action="Edit" asp-route-id="@Model.Id"
+                       class="event-primary-button">
+                        Edit event
+                    </a>
+
+                    <a asp-controller="Enrolments"
+                       asp-action="ForEvent"
+                       asp-route-eventId="@Model.Id"
+                       class="event-sidebar-button">
+                        View enrolments
+                    </a>
+
+                    <a asp-controller="Results"
+                       asp-action="Capture"
+                       asp-route-eventId="@Model.Id"
+                       class="event-sidebar-button">
+                        Capture results
+                    </a>
+
+                    <a asp-action="Delete" asp-route-id="@Model.Id"
+                       class="event-delete-link">
+                        Delete event
+                    </a>
+                }
+                else
+                {
+                    <p>Explore the event details and available participation categories.</p>
+                }
+            </div>
+
+            <div class="event-organiser-card">
+                <span class="event-eyebrow">EVENT ORGANISER</span>
+                <div class="organiser-profile">
+                    <div class="organiser-avatar">
+                        @Model.Organiser?.FirstName?.Substring(0, 1).ToUpper()
+                    </div>
+                    <div>
+                        <strong>@Model.Organiser?.FirstName @Model.Organiser?.LastName</strong>
+                        <span>Event organiser</span>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+    </div>
 </div>
