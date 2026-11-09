@@ -69,7 +69,7 @@ public class EventsController : Controller
         var hasBanner = bannerFile is { Length: > 0 };
         if (hasBanner)
         {
-            var error = _blobs.Validate(bannerFile);
+            var error = _blobs.Validate(bannerFile!);
             if (error != null) ModelState.AddModelError("bannerFile", error);
         }
         if (!ModelState.IsValid) return View(ev);
@@ -81,7 +81,7 @@ public class EventsController : Controller
         {
             if (hasBanner)
             {
-                uploaded = await _blobs.UploadBannerAsync(bannerFile!);
+                uploaded = await _blobs.UploadFileAsync(bannerFile!);
                 ev.BannerBlobName = uploaded.BlobName;
                 ev.BannerImageUrl = uploaded.Url;
             }
@@ -96,6 +96,7 @@ public class EventsController : Controller
         TempData["Success"] = "Event created.";
         return RedirectToAction("Index", "Categories",  new { id = ev.Id });
     }
+
     [Authorize(Roles = "Admin,Organiser")]
     public async Task<IActionResult> Edit(int? id)
     {
@@ -104,19 +105,56 @@ public class EventsController : Controller
         return ev == null ? NotFound() : View(ev);
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken, RequestSizeLimit(5_000_000)]
     [Authorize(Roles = "Admin,Organiser")]
-    public async Task<IActionResult> Edit(int id)
+    public async Task<IActionResult> Edit(int id, IFormFile? bannerFile, bool removeBanner)
     {
         var ev = await FindOwnedEventAsync(id);
         if (ev == null) return NotFound();
+
+        var hasBanner = bannerFile is { Length: > 0 };
+        if (hasBanner)
+        {
+            var error = _blobs.Validate(bannerFile!);
+            if (error != null) ModelState.AddModelError("bannerFile", error);
+        }
 
         // Whitelist bindable properties (prevents over-posting, keeps OrganiserId safe)
         var updated = await TryUpdateModelAsync(ev, "",
             e => e.Name, e => e.Description, e => e.Date,
             e => e.Location, e => e.DistanceKm, e => e.EventType);
 
-        if (!updated) return View(ev);
+        if (!updated || !ModelState.IsValid) return View(ev);
+        
+        var oldBanner = ev.BannerBlobName;
+        BlobUploadResult? uploaded = null;
+
+        try
+        {
+            if (hasBanner)
+            {
+                uploaded = await _blobs.UploadFileAsync(bannerFile!);
+                ev.BannerBlobName = uploaded.BlobName;
+                ev.BannerImageUrl = uploaded.Url;
+            }
+            else if (removeBanner)
+            {
+                ev.BannerBlobName = null;
+                ev.BannerImageUrl = null;
+
+            }
+            await _db.SaveChangesAsync();
+        }
+        catch
+        {
+            if (uploaded != null) await _blobs.DeleteAsync(uploaded.BlobName);
+            throw;
+        }
+
+        if ((uploaded != null || removeBanner) && oldBanner != null)
+        {
+            await _blobs.DeleteAsync(oldBanner);
+        }
 
         await _db.SaveChangesAsync();
         TempData["Success"] = "Event updated.";
@@ -144,8 +182,11 @@ public class EventsController : Controller
             return RedirectToAction(nameof(Details), new { id });
         }
 
+        var blobName = ev.BannerBlobName
         _db.Events.Remove(ev);   // categories are cascade-deleted
         await _db.SaveChangesAsync();
+        await _blobs.DeleteAsync(blobName);
+
         TempData["Success"] = "Event deleted.";
         return RedirectToAction(nameof(Index));
     }
