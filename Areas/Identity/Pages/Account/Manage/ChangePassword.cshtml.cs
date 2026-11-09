@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using RaceDay.Data;
 
-namespace RunWayy.Areas.Identity.Pages.Account.Manage;
+namespace RaceDay.Areas.Identity.Pages.Account.Manage;
 
 public class ChangePasswordModel : PageModel
 {
