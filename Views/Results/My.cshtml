@@ -1,27 +1,109 @@
-@model IEnumerable<RaceDay.Models.Result>
-@{ ViewData["Title"] = "My results"; }
+﻿@model IEnumerable<RaceDay.Models.Result>
+@{
+    ViewData["Title"] = "My results";
 
-<h1 class="h3">My results</h1>
-
-@if (!Model.Any())
-{
-    <p class="text-muted">No results have been recorded for you yet.</p>
+    var results = Model.ToList();
+    var bestPosition = results.Any() ? results.Min(r => r.Position) : 0;
+    var averagePosition = results.Any() ? results.Average(r => r.Position) : 0;
+    var completedEvents = results.Count;
 }
-else
-{
-    <table class="table align-middle">
-        <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th></tr></thead>
-        <tbody>
-        @foreach (var r in Model)
+
+<div class="my-results-page">
+    <div class="my-results-header">
+        <div>
+            <span class="my-results-eyebrow">PARTICIPANT AREA</span>
+            <h1>My results</h1>
+            <p>Review your event performances and finishing positions.</p>
+        </div>
+        <a asp-controller="Events" asp-action="Index" class="my-results-browse">
+            Browse events
+            <span>→</span>
+        </a>
+    </div>
+
+    <div class="my-results-stats">
+        <div class="my-results-stat">
+            <span>Recorded results</span>
+            <strong>@completedEvents</strong>
+        </div>
+        <div class="my-results-stat">
+            <span>Best position</span>
+            <strong>@(bestPosition > 0 ? $"#{bestPosition}" : "--")</strong>
+        </div>
+        <div class="my-results-stat">
+            <span>Average position</span>
+            <strong>@(averagePosition > 0 ? averagePosition.ToString("0.0") : "--")</strong>
+        </div>
+    </div>
+
+    <div class="my-results-content">
+        <div class="my-results-section-heading">
+            <div>
+                <h2>Performance history</h2>
+                <p>Your recorded event results.</p>
+            </div>
+            <span class="my-results-count">@completedEvents results</span>
+        </div>
+
+        @if (!results.Any())
         {
-            <tr>
-                <td>@r.Enrolment?.Event?.Name</td>
-                <td>@r.Enrolment?.Event?.Date.ToString("yyyy-MM-dd")</td>
-                <td>@r.Enrolment?.Category?.Name</td>
-                <td>@r.FinishTime.ToString(@"hh\:mm\:ss")</td>
-                <td>@r.Position</td>
-            </tr>
+            <div class="my-results-empty">
+                <div class="my-results-empty-icon">—</div>
+                <h3>No results available</h3>
+                <p>No results have been recorded for you yet. Once an organiser captures your event result, it will appear here.</p>
+                <a asp-controller="Events" asp-action="Index">Explore events</a>
+            </div>
         }
-        </tbody>
-    </table>
-}
+        else
+        {
+            <div class="my-results-table-wrapper">
+                <table class="my-results-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Event date</th>
+                            <th>Category</th>
+                            <th>Finish time</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in results.OrderByDescending(r => r.Enrolment?.Event?.Date))
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Events"
+                                       asp-action="Details"
+                                       asp-route-id="@r.Enrolment?.EventId"
+                                       class="my-results-event-name">
+                                        @(r.Enrolment?.Event?.Name ?? "Event unavailable")
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="my-results-date">
+                                        @(r.Enrolment?.Event?.Date.ToString("dd MMM yyyy") ?? "Not available")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="my-results-category">
+                                        @(r.Enrolment?.Category?.Name ?? "Unassigned")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="my-results-time">
+                                        @r.FinishTime.ToString(@"hh\:mm\:ss")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="my-results-position @(r.Position == bestPosition ? "best" : "")">
+                                        #@r.Position
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

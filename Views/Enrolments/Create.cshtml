@@ -1,23 +1,114 @@
-@model RaceDay.Models.ViewModels.EnrolViewModel
-@{ ViewData["Title"] = "Enter event"; }
+﻿@model RaceDay.Models.ViewModels.EnrolViewModel
 
-<h1 class="h3">Enter @Model.EventName</h1>
-<p class="text-muted">@Model.EventDate.ToString("dddd, d MMMM yyyy HH:mm") &middot; @Model.Location</p>
-<hr />
-<div class="row"><div class="col-md-6">
-    <form asp-action="Create">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="EventId" />
-        <div class="mb-3">
-            <label asp-for="CategoryId" class="form-label"></label>
-            <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
-                <option value="">-- Select a category --</option>
-            </select>
-            <span asp-validation-for="CategoryId" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Confirm entry</button>
-        <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-outline-secondary">Cancel</a>
-    </form>
-</div></div>
+@{
+    ViewData["Title"] = "Enter event";
+}
 
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+<div class="enrol-page">
+
+    <div class="enrol-back-link">
+        <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId">
+            ← Back to event
+        </a>
+    </div>
+
+    <section class="enrol-header">
+        <span class="enrol-eyebrow">RACEDAY REGISTRATION</span>
+        <h1>Enter an event.</h1>
+        <p>Complete your registration and get ready for race day.</p>
+    </section>
+
+    <div class="enrol-layout">
+
+        <main class="enrol-form-card">
+            <div class="enrol-card-heading">
+                <div>
+                    <span class="enrol-step">STEP 01</span>
+                    <h2>Select your category</h2>
+                    <p>Choose the category you want to participate in.</p>
+                </div>
+                <div class="enrol-heading-icon">🏁</div>
+            </div>
+
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger enrol-validation"
+                     role="alert"></div>
+
+                <input type="hidden" asp-for="EventId" />
+
+                <div class="enrol-form-group">
+                    <label asp-for="CategoryId">Participation category</label>
+
+                    <select asp-for="CategoryId"
+                            asp-items="Model.Categories"
+                            class="enrol-select">
+                        <option value="">-- Select a category --</option>
+                    </select>
+
+                    <span asp-validation-for="CategoryId"
+                          class="text-danger enrol-field-error"></span>
+
+                    <span class="enrol-field-help">
+                        Select the category that best matches your participation.
+                    </span>
+                </div>
+
+                <div class="enrol-form-actions">
+                    <button type="submit" class="enrol-submit-button">
+                        Confirm entry →
+                    </button>
+
+                    <a asp-controller="Events"
+                       asp-action="Details"
+                       asp-route-id="@Model.EventId"
+                       class="enrol-cancel-button">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+            <div class="enrol-security-note">
+                <span>✓</span>
+                Your selection will be submitted to RaceDay for registration.
+            </div>
+        </main>
+
+        <aside class="enrol-event-sidebar">
+            <div class="enrol-event-card">
+                <span class="enrol-eyebrow">YOUR SELECTED EVENT</span>
+
+                <div class="enrol-event-icon">🏃</div>
+
+                <h2>@Model.EventName</h2>
+
+                <div class="enrol-event-detail">
+                    <span>📅</span>
+                    <div>
+                        <small>Event date</small>
+                        <strong>@Model.EventDate.ToString("dddd, d MMMM yyyy")</strong>
+                        <span>@Model.EventDate.ToString("HH:mm")</span>
+                    </div>
+                </div>
+
+                <div class="enrol-event-detail">
+                    <span>📍</span>
+                    <div>
+                        <small>Location</small>
+                        <strong>@Model.Location</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="enrol-help-card">
+                <h3>Before you register</h3>
+                <p>Check the event date, location and selected category before confirming your entry.</p>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

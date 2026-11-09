@@ -1,42 +1,147 @@
-@model IEnumerable<RaceDay.Models.Enrolment>
-@{ ViewData["Title"] = "My enrolments"; }
-
-<partial name="_Alerts" />
-<h1 class="h3">My enrolments</h1>
-
-@if (!Model.Any())
-{
-    <p class="text-muted">You haven't entered any events yet. <a asp-controller="Events" asp-action="Index">Browse events</a>.</p>
+﻿@model IEnumerable<RaceDay.Models.Enrolment>
+@{
+    ViewData["Title"] = "My enrolments";
+    var enrolments = Model.ToList();
+    var upcomingCount = enrolments.Count(e => e.Event != null && e.Event.Date > DateTime.Now);
+    var completedCount = enrolments.Count(e => e.Result != null);
 }
-else
-{
-    <table class="table align-middle">
-        <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Result</th><th></th></tr></thead>
-        <tbody>
-        @foreach (var e in Model)
+
+<div class="my-enrolments-page">
+    <partial name="_Alerts" />
+
+    <div class="my-enrolments-header">
+        <div>
+            <span class="my-enrolments-eyebrow">PARTICIPANT AREA</span>
+            <h1>My enrolments</h1>
+            <p>Manage your event entries and keep track of your results.</p>
+        </div>
+        <a asp-controller="Events" asp-action="Index" class="my-enrolments-browse">
+            Browse events
+            <span>→</span>
+        </a>
+    </div>
+
+    <div class="my-enrolments-stats">
+        <div class="my-enrolments-stat">
+            <span>Total entries</span>
+            <strong>@enrolments.Count</strong>
+        </div>
+        <div class="my-enrolments-stat">
+            <span>Upcoming events</span>
+            <strong>@upcomingCount</strong>
+        </div>
+        <div class="my-enrolments-stat">
+            <span>Completed events</span>
+            <strong>@completedCount</strong>
+        </div>
+    </div>
+
+    <div class="my-enrolments-content">
+        <div class="my-enrolments-section-heading">
+            <div>
+                <h2>Your event entries</h2>
+                <p>Events you have registered to participate in.</p>
+            </div>
+            <span class="my-enrolments-count">@enrolments.Count entries</span>
+        </div>
+
+        @if (!enrolments.Any())
         {
-            <tr>
-                <td><a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId">@e.Event?.Name</a></td>
-                <td>@e.Event?.Date.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@e.Category?.Name</td>
-                <td>
-                    @if (e.Result != null)
-                    {
-                        <span>@e.Result.FinishTime.ToString(@"hh\:mm\:ss") (position @e.Result.Position)</span>
-                    }
-                    else { <span class="text-muted">-</span> }
-                </td>
-                <td class="text-end">
-                    @if (e.Result == null && e.Event!.Date > DateTime.Now)
-                    {
-                        <form asp-action="Withdraw" asp-route-id="@e.Id" method="post" class="d-inline"
-                              onsubmit="return confirm('Withdraw from this event?');">
-                            <button class="btn btn-sm btn-outline-danger">Withdraw</button>
-                        </form>
-                    }
-                </td>
-            </tr>
+            <div class="my-enrolments-empty">
+                <div class="my-enrolments-empty-icon">+</div>
+                <h3>No enrolments yet</h3>
+                <p>You haven't entered any events. Browse available events and register to get started.</p>
+                <a asp-controller="Events" asp-action="Index">Explore events</a>
+            </div>
         }
-        </tbody>
-    </table>
-}
+        else
+        {
+            <div class="my-enrolments-table-wrapper">
+                <table class="my-enrolments-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Event date</th>
+                            <th>Category</th>
+                            <th>Result</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var e in enrolments.OrderBy(e => e.Event?.Date))
+                        {
+                            var eventDate = e.Event?.Date;
+                            var isUpcoming = eventDate.HasValue && eventDate.Value > DateTime.Now;
+                            var hasResult = e.Result != null;
+
+                            <tr>
+                                <td>
+                                    <a asp-controller="Events"
+                                       asp-action="Details"
+                                       asp-route-id="@e.EventId"
+                                       class="my-enrolments-event-name">
+                                        @(e.Event?.Name ?? "Event unavailable")
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="my-enrolments-date">
+                                        @(eventDate?.ToString("dd MMM yyyy") ?? "Not available")
+                                    </span>
+                                    <span class="my-enrolments-time">
+                                        @(eventDate?.ToString("HH:mm") ?? "")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="my-enrolments-category">
+                                        @(e.Category?.Name ?? "Unassigned")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (hasResult)
+                                    {
+                                        <div class="my-enrolments-result">
+                                            <strong>@e.Result!.FinishTime.ToString(@"hh\:mm\:ss")</strong>
+                                            <span>Position @e.Result.Position</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="my-enrolments-no-result">Pending</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (hasResult)
+                                    {
+                                        <span class="my-enrolments-status completed">Completed</span>
+                                    }
+                                    else if (isUpcoming)
+                                    {
+                                        <span class="my-enrolments-status upcoming">Upcoming</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="my-enrolments-status pending">Awaiting result</span>
+                                    }
+                                </td>
+                                <td class="my-enrolments-actions">
+                                    @if (!hasResult && isUpcoming)
+                                    {
+                                        <form asp-action="Withdraw"
+                                              asp-route-id="@e.Id"
+                                              method="post"
+                                              onsubmit="return confirm('Are you sure you want to withdraw from this event?');">
+                                            <button type="submit" class="my-enrolments-withdraw">
+                                                Withdraw
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -1,27 +1,81 @@
-@page
+﻿@page
 @model IndexModel
+
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+<div class="profile-page">
+
+    <div class="profile-header">
+        <div class="profile-avatar">
+            @(Model.Username?.Length > 0 ? Model.Username.Substring(0, 1).ToUpper() : "U")
+        </div>
+        <div>
+            <span class="profile-eyebrow">ACCOUNT SETTINGS</span>
+            <h1>My profile</h1>
+            <p>Manage your personal account information and contact details.</p>
+        </div>
+    </div>
+
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="profile-content">
+
+        <section class="profile-card">
+            <div class="profile-card-header">
+                <div>
+                    <h2>Personal information</h2>
+                    <p>Update the contact information associated with your account.</p>
+                </div>
+                <span class="profile-section-icon">👤</span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
+
+            <form id="profile-form" method="post">
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger profile-validation"
+                     role="alert"></div>
+
+                <div class="profile-form-group">
+                    <label asp-for="Username">Username</label>
+                    <input asp-for="Username"
+                           class="profile-input"
+                           placeholder="Your username"
+                           disabled />
+                    <span class="profile-field-note">Your username cannot be changed.</span>
+                </div>
+
+                <div class="profile-form-group">
+                    <label asp-for="Input.PhoneNumber">Phone number</label>
+                    <input asp-for="Input.PhoneNumber"
+                           class="profile-input"
+                           placeholder="Enter your phone number"
+                           autocomplete="tel" />
+                    <span asp-validation-for="Input.PhoneNumber"
+                          class="text-danger profile-field-error"></span>
+                </div>
+
+                <div class="profile-form-footer">
+                    <span>Your changes will be saved to your RaceDay account.</span>
+                    <button id="update-profile-button"
+                            type="submit"
+                            class="profile-save-button">
+                        Save changes →
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <aside class="profile-information-card">
+            <div class="profile-info-icon">i</div>
+            <h3>Keep your profile up to date</h3>
+            <p>
+                Your contact details help RaceDay maintain accurate participant
+                and organiser information.
+            </p>
+        </aside>
+
     </div>
 </div>
 

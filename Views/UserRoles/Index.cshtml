@@ -1,37 +1,97 @@
 ﻿@model IEnumerable<RaceDay.Models.ViewModels.UserRolesViewModel>
 
 @{
-    ViewData["Title"] = "User Roles Managmenent";
+    ViewData["Title"] = "User Roles Management";
+    var users = Model.ToList();
 }
 
-<div class="container mt-4">
+<div class="user-roles-page">
+    <div class="user-roles-header">
+        <div>
+            <span class="user-roles-eyebrow">ADMINISTRATION</span>
+            <h1>User Roles Management</h1>
+            <p>View registered users and manage their system permissions.</p>
+        </div>
+        <div class="user-roles-total">
+            <span>Registered users</span>
+            <strong>@users.Count</strong>
+        </div>
+    </div>
 
-    <h2>User Roles Management</h2>
-    <hr />
+    <div class="user-roles-content">
+        <div class="user-roles-section-heading">
+            <div>
+                <h2>System users</h2>
+                <p>Manage access levels and assigned roles.</p>
+            </div>
+            <span class="user-roles-count">@users.Count users</span>
+        </div>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-info">
-            <tr>
-                <th>Email</th>
-                <th>Username</th>
-                <th>Roles</th>
-                <th style="width:150px;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>@user.Email</td>
-                    <td>@user.UserName</td>
-                    <td>
-                        @string.Join(", ", user.Roles)
-                    </td>
-                    <td>
-                        <a asp-action="Manage" asp-route-userId="@user.UserId" class="btn btn-danger btn-sm"> Manage Roles</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        @if (!users.Any())
+        {
+            <div class="user-roles-empty">
+                <div class="user-roles-empty-icon">—</div>
+                <h3>No users found</h3>
+                <p>There are currently no registered users to manage.</p>
+            </div>
+        }
+        else
+        {
+            <div class="user-roles-table-wrapper">
+                <table class="user-roles-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Username</th>
+                            <th>Assigned roles</th>
+                            <th class="user-roles-actions-heading">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in users.OrderBy(u => u.Email))
+                        {
+                            <tr>
+                                <td>
+                                    <div class="user-roles-user">
+                                        <div class="user-roles-avatar">
+                                            @(string.IsNullOrWhiteSpace(user.Email) ? "?" : user.Email.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <span>@(user.Email ?? "No email available")</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="user-roles-username">
+                                        @(user.UserName ?? "—")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="user-roles-badges">
+                                        @if (user.Roles != null && user.Roles.Any())
+                                        {
+                                            @foreach (var role in user.Roles)
+                                            {
+                                                <span class="user-roles-badge">@role</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="user-roles-unassigned">No roles assigned</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="user-roles-actions">
+                                    <a asp-action="Manage"
+                                       asp-route-userId="@user.UserId"
+                                       class="user-roles-manage">
+                                        Manage roles
+                                        <span>→</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
 </div>

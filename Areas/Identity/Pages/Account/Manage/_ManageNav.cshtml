@@ -1,16 +1,87 @@
-@using RaceDay.Areas.Identity.Pages.Account.Manage
+﻿@using RaceDay.Areas.Identity.Pages.Account.Manage
 @inject SignInManager<ApplicationUser> SignInManager
+
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-    @if (hasExternalLogins)
-    {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
-    }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+
+<nav class="manage-navigation">
+    <div class="manage-navigation-header">
+        <span class="manage-navigation-eyebrow">ACCOUNT</span>
+        <h3>Settings</h3>
+        <p>Manage your RaceDay account.</p>
+    </div>
+
+    <ul class="manage-navigation-list">
+        <li>
+            <a class="manage-nav-link @ManageNavPages.IndexNavClass(ViewContext)"
+               id="profile"
+               asp-page="./Index">
+                <span class="manage-nav-icon">👤</span>
+                <span>Profile</span>
+                <span class="manage-nav-arrow">→</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="manage-nav-link @ManageNavPages.EmailNavClass(ViewContext)"
+               id="email"
+               asp-page="./Email">
+                <span class="manage-nav-icon">✉</span>
+                <span>Email address</span>
+                <span class="manage-nav-arrow">→</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="manage-nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)"
+               id="change-password"
+               asp-page="./ChangePassword">
+                <span class="manage-nav-icon">🔒</span>
+                <span>Password</span>
+                <span class="manage-nav-arrow">→</span>
+            </a>
+        </li>
+
+        @if (hasExternalLogins)
+        {
+            <li>
+                <a class="manage-nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)"
+                   id="external-login"
+                   asp-page="./ExternalLogins">
+                    <span class="manage-nav-icon">🔗</span>
+                    <span>External logins</span>
+                    <span class="manage-nav-arrow">→</span>
+                </a>
+            </li>
+        }
+
+        <li>
+            <a class="manage-nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"
+               id="two-factor"
+               asp-page="./TwoFactorAuthentication">
+                <span class="manage-nav-icon">🛡</span>
+                <span>Two-factor authentication</span>
+                <span class="manage-nav-arrow">→</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="manage-nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)"
+               id="personal-data"
+               asp-page="./PersonalData">
+                <span class="manage-nav-icon">📄</span>
+                <span>Personal data</span>
+                <span class="manage-nav-arrow">→</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="manage-navigation-footer">
+        <span class="manage-security-icon">✓</span>
+        <div>
+            <strong>Account security</strong>
+            <p>Keep your account information up to date.</p>
+        </div>
+    </div>
+</nav>

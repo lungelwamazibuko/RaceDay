@@ -1,32 +1,174 @@
-@using RaceDay.Models
+﻿@using RaceDay.Models
 @model IEnumerable<Enrolment>
+
 @{
     var ev = (Event)ViewBag.Event;
+    var enrolments = Model.ToList();
+
     ViewData["Title"] = $"Enrolments - {ev.Name}";
 }
 
 <partial name="_Alerts" />
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0">Enrolments: @ev.Name</h1>
-    <a asp-controller="Results" asp-action="Capture" asp-route-eventId="@ev.Id" class="btn btn-primary">Capture results</a>
-</div>
-<p class="text-muted">@Model.Count() participant(s) enrolled</p>
 
-@if (Model.Any())
-{
-    <table class="table align-middle">
-        <thead><tr><th>Participant</th><th>Gender</th><th>Category</th><th>Enrolled on</th></tr></thead>
-        <tbody>
-        @foreach (var e in Model)
+<div class="enrolments-page">
+
+    <div class="enrolments-back-link">
+        <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id">
+            ← Back to event
+        </a>
+    </div>
+
+    <section class="enrolments-header">
+        <div>
+            <span class="enrolments-eyebrow">EVENT MANAGEMENT</span>
+            <h1>Participant enrolments.</h1>
+            <p>Manage registrations and review participants entered in this event.</p>
+        </div>
+
+        <a asp-controller="Results"
+           asp-action="Capture"
+           asp-route-eventId="@ev.Id"
+           class="enrolments-primary-button">
+            Capture results →
+        </a>
+    </section>
+
+    <section class="enrolments-event-card">
+        <div class="enrolments-event-icon">🏁</div>
+
+        <div class="enrolments-event-info">
+            <span class="enrolments-eyebrow">SELECTED EVENT</span>
+            <h2>@ev.Name</h2>
+
+            <p>
+                @ev.EventType
+                <span>·</span>
+                @ev.DistanceKm.ToString("0.##") km
+                <span>·</span>
+                @ev.Location
+            </p>
+
+            <span class="enrolments-event-date">
+                @ev.Date.ToString("dddd, d MMMM yyyy HH:mm")
+            </span>
+        </div>
+    </section>
+
+    <section class="enrolments-statistics">
+        <div class="enrolments-stat-card">
+            <div class="enrolments-stat-icon">👥</div>
+            <div>
+                <span>Total participants</span>
+                <h2>@enrolments.Count</h2>
+            </div>
+        </div>
+
+        <div class="enrolments-stat-card">
+            <div class="enrolments-stat-icon">🏃</div>
+            <div>
+                <span>Categories represented</span>
+                <h2>@enrolments.Select(e => e.CategoryId).Distinct().Count()</h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="enrolments-table-card">
+        <div class="enrolments-table-header">
+            <div>
+                <h2>Registered participants</h2>
+                <p>View the participants registered for this event.</p>
+            </div>
+
+            <span class="enrolments-count">
+                @enrolments.Count participant(s)
+            </span>
+        </div>
+
+        @if (enrolments.Any())
         {
-            <tr>
-                <td>@e.Participant?.FirstName @e.Participant?.LastName</td>
-                <td>@e.Participant?.Gender</td>
-                <td>@e.Category?.Name</td>
-                <td>@e.EnrolledOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
-            </tr>
+            <div class="table-responsive">
+                <table class="table enrolments-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Participant</th>
+                            <th>Gender</th>
+                            <th>Category</th>
+                            <th>Registration date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var e in enrolments.OrderBy(e => e.Participant?.FirstName))
+                        {
+                            var firstName = e.Participant?.FirstName;
+                            var initial = !string.IsNullOrWhiteSpace(firstName)
+                            ? firstName.Substring(0, 1).ToUpper()
+                            : "U";
+
+                            <tr>
+                                <td>
+                                    <div class="enrolment-participant">
+                                        <div class="enrolment-participant-avatar">
+                                            @initial
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                @e.Participant?.FirstName @e.Participant?.LastName
+                                            </strong>
+                                            <span>Participant</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @(e.Participant?.Gender != null ? e.Participant.Gender.ToString() : "Not specified")
+                                </td>
+
+                                <td>
+                                    <span class="enrolment-category">
+                                        @(e.Category?.Name ?? "Unassigned")
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="enrolment-date">
+                                        @e.EnrolledOn.ToLocalTime().ToString("d MMM yyyy")
+                                    </span>
+                                    <span class="enrolment-time">
+                                        @e.EnrolledOn.ToLocalTime().ToString("HH:mm")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
-        </tbody>
-    </table>
-}
-<a asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id" class="btn btn-outline-secondary">Back to event</a>
+        else
+        {
+            <div class="enrolments-empty">
+                <div class="enrolments-empty-icon">👥</div>
+                <h3>No participants yet</h3>
+                <p>There are currently no registrations for this event.</p>
+            </div>
+        }
+    </section>
+
+    <div class="enrolments-footer">
+        <a asp-controller="Events"
+           asp-action="Details"
+           asp-route-id="@ev.Id"
+           class="enrolments-back-button">
+            ← Back to event
+        </a>
+
+        <a asp-controller="Results"
+           asp-action="Capture"
+           asp-route-eventId="@ev.Id"
+           class="enrolments-primary-button">
+            Capture results →
+        </a>
+    </div>
+
+</div>

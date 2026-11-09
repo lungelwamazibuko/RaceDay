@@ -41,77 +41,58 @@
                 <span></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="mainNavigation">
+            <div class="main-navigation collapse" id="mainNavigation">
 
                 <ul class="nav-links">
-
                     <li>
-                        <a asp-controller="Home"
-                           asp-action="Index">
-                            Home
-                        </a>
+                        <a asp-controller="Home" asp-action="Index">Home</a>
                     </li>
 
                     <li>
-                        <a asp-controller="Events"
-                           asp-action="Index">
-                            Explore Events
-                        </a>
+                        <a asp-controller="Events" asp-action="Index">Explore Events</a>
                     </li>
 
                     @if (User.IsInRole("Admin") || User.IsInRole("Organiser"))
                     {
                         <li>
-                            <a asp-controller="Events"
-                               asp-action="Index">
-                                Manage Events
-                            </a>
+                            <a asp-controller="Events" asp-action="Index">Manage Events</a>
                         </li>
 
                         <li>
-                            <a asp-controller="Results"
-                               asp-action="Capture">
-                                Results
-                            </a>
+                            <a asp-controller="Results" asp-action="Capture">Results</a>
                         </li>
                     }
 
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
-                            <a asp-controller="UserRoles"
-                               asp-action="Index">
-                                Users
-                            </a>
+                            <a asp-controller="UserRoles" asp-action="Index">Users</a>
                         </li>
                     }
 
                     @if (User.IsInRole("Participant"))
                     {
                         <li>
-                            <a asp-controller="Enrolments"
-                               asp-action="My">
-                                My Enrolments
-                            </a>
+                            <a asp-controller="Enrolments" asp-action="My">My Enrolments</a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Results" asp-action="My">My Results</a>
                         </li>
                     }
 
                     <li>
-                        <a asp-controller="Home"
-                           asp-action="Privacy">
-                            About
-                        </a>
+                        <a asp-controller="Home" asp-action="Privacy">About</a>
                     </li>
-
                 </ul>
 
                 <div class="nav-account">
                     <partial name="_LoginPartial" />
 
-                    @if (!User.Identity!.IsAuthenticated)
+                    @if (User.Identity?.IsAuthenticated != true)
                     {
-                        <a asp-controller="Enrolments"
-                           asp-action="Create"
+                        <a asp-controller="Events"
+                           asp-action="Index"
                            class="nav-join-button">
                             Get Started <span>↗</span>
                         </a>
@@ -130,8 +111,7 @@
         <div class="footer-top">
 
             <div class="footer-brand">
-                <a asp-controller="Home" asp-action="Index"
-                   class="brand-logo">
+                <a asp-controller="Home" asp-action="Index" class="brand-logo">
                     <span class="brand-symbol">R</span>
                     <span>Race<span class="brand-light">Day</span></span>
                 </a>
@@ -145,22 +125,14 @@
             <div class="footer-links">
                 <div>
                     <span class="footer-heading">DISCOVER</span>
-                    <a asp-controller="Events" asp-action="Index">
-                        Events
-                    </a>
-                    <a asp-controller="Home" asp-action="Index">
-                        Home
-                    </a>
+                    <a asp-controller="Events" asp-action="Index">Events</a>
+                    <a asp-controller="Home" asp-action="Index">Home</a>
                 </div>
 
                 <div>
                     <span class="footer-heading">ACCOUNT</span>
-                    <a asp-controller="Enrolments" asp-action="My">
-                        My Enrolments
-                    </a>
-                    <a asp-controller="Home" asp-action="Privacy">
-                        Privacy
-                    </a>
+                    <a asp-controller="Enrolments" asp-action="My">My Enrolments</a>
+                    <a asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
             </div>
 

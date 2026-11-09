@@ -1,5 +1,5 @@
 @{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -7,21 +7,30 @@
     {
         Layout = "/Areas/Identity/Pages/_Layout.cshtml";
     }
+
+    ViewData["Title"] ??= "Account Settings";
 }
 
-<h1>Manage your account</h1>
+<div class="manage-page">
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
+    <section class="manage-page-header">
+        <div>
+            <span class="manage-page-eyebrow">RACEDAY ACCOUNT</span>
+            <h1>Manage your account</h1>
+            <p>Update your profile, manage security and control your account settings.</p>
+        </div>
+    </section>
+
+    <div class="manage-page-layout">
+        <aside class="manage-page-sidebar">
             <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
+        </aside>
+
+        <main class="manage-page-content">
             @RenderBody()
-        </div>
+        </main>
     </div>
+
 </div>
 
 @section Scripts {
