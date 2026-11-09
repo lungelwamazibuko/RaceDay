@@ -81,7 +81,7 @@ public class EventsController : Controller
         {
             if (hasBanner)
             {
-                uploaded = await _blobs.UploadFileAsync(bannerFile!);
+                uploaded = await _blobs.UploadBannerAsync(bannerFile!);
                 ev.BannerBlobName = uploaded.BlobName;
                 ev.BannerImageUrl = uploaded.Url;
             }
@@ -133,7 +133,7 @@ public class EventsController : Controller
         {
             if (hasBanner)
             {
-                uploaded = await _blobs.UploadFileAsync(bannerFile!);
+                uploaded = await _blobs.UploadBannerAsync(bannerFile!);
                 ev.BannerBlobName = uploaded.BlobName;
                 ev.BannerImageUrl = uploaded.Url;
             }
