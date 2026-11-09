@@ -16,6 +16,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
+builder.Services.AddSingleton<RaceDay.Services.IBlobStorageService, RaceDay.Services.BlobStorageService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
