@@ -1,8 +1,198 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Discover Your Next Race";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero-section">
+    <div class="hero-content">
+        <span class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            YOUR NEXT CHALLENGE STARTS HERE
+        </span>
+
+        <h1>
+            Find your<br />
+            <span>next finish line.</span>
+        </h1>
+
+        <p class="hero-description">
+            Discover sporting events, register for races, track your
+            participation and celebrate every achievement.
+            Your next adventure starts with RaceDay.
+        </p>
+
+        <div class="hero-actions">
+            <a asp-controller="Events" asp-action="Index"
+               class="btn-primary-custom">
+                Explore events
+                <span>↗</span>
+            </a>
+
+            <a asp-controller="Enrolments" asp-action="Create"
+               class="btn-secondary-custom">
+                Join RaceDay
+            </a>
+        </div>
+
+        <div class="hero-note">
+            <span class="hero-note-line"></span>
+            RUN. WALK. RIDE. REPEAT.
+        </div>
+    </div>
+
+    <div class="hero-visual">
+        <div class="hero-image-overlay"></div>
+
+        <div class="hero-image-content">
+            <div class="floating-label">
+                <span class="live-dot"></span>
+                THE STARTING LINE AWAITS
+            </div>
+
+            <div class="hero-bottom-text">
+                <span>01 / 03</span>
+                <span>MAKE EVERY MOVE COUNT.</span>
+            </div>
+        </div>
+
+        <div class="hero-image-decoration">
+            RD
+        </div>
+    </div>
+
+    <div class="hero-side-label">
+        BUILT FOR EVERY FINISH LINE
+    </div>
+</section>
+
+<section class="activity-section">
+    <div class="section-heading">
+        <div>
+            <span class="section-eyebrow">FIND YOUR DISCIPLINE</span>
+            <h2>Move your way.</h2>
+        </div>
+
+        <a asp-controller="Events" asp-action="Index"
+           class="text-link">
+            View all events <span>↗</span>
+        </a>
+    </div>
+
+    <div class="activity-grid">
+        <a asp-controller="Events" asp-action="Index"
+           class="activity-card running-card">
+            <div class="activity-number">01</div>
+            <div class="activity-card-content">
+                <span>ENDURANCE</span>
+                <h3>Running</h3>
+                <p>Every kilometre brings you closer.</p>
+                <div class="activity-arrow">↗</div>
+            </div>
+        </a>
+
+        <a asp-controller="Events" asp-action="Index"
+           class="activity-card cycling-card">
+            <div class="activity-number">02</div>
+            <div class="activity-card-content">
+                <span>ON TWO WHEELS</span>
+                <h3>Cycling</h3>
+                <p>Discover new routes and challenges.</p>
+                <div class="activity-arrow">↗</div>
+            </div>
+        </a>
+
+        <a asp-controller="Events" asp-action="Index"
+           class="activity-card walking-card">
+            <div class="activity-number">03</div>
+            <div class="activity-card-content">
+                <span>EVERY STEP COUNTS</span>
+                <h3>Walking</h3>
+                <p>Start moving at your own pace.</p>
+                <div class="activity-arrow">↗</div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<section class="platform-section">
+    <div class="platform-intro">
+        <span class="section-eyebrow">MORE THAN A RACE</span>
+        <h2>Everything you need.<br /><span>One platform.</span></h2>
+        <p>
+            From finding your next event to crossing the finish line,
+            RaceDay makes the entire sporting experience easier.
+        </p>
+
+        <a asp-controller="Events" asp-action="Index"
+           class="btn-primary-custom">
+            Get started <span>↗</span>
+        </a>
+    </div>
+
+    <div class="feature-list">
+        <div class="feature-item">
+            <div class="feature-icon">01</div>
+            <div>
+                <h3>Discover events</h3>
+                <p>
+                    Explore running, walking and cycling events
+                    in one convenient place.
+                </p>
+            </div>
+            <span class="feature-arrow">↗</span>
+        </div>
+
+        <div class="feature-item">
+            <div class="feature-icon">02</div>
+            <div>
+                <h3>Simple registration</h3>
+                <p>
+                    Find an event and manage your enrolments
+                    without unnecessary complications.
+                </p>
+            </div>
+            <span class="feature-arrow">↗</span>
+        </div>
+
+        <div class="feature-item">
+            <div class="feature-icon">03</div>
+            <div>
+                <h3>Results and achievements</h3>
+                <p>
+                    Follow race results and keep track of
+                    your sporting achievements.
+                </p>
+            </div>
+            <span class="feature-arrow">↗</span>
+        </div>
+
+        <div class="feature-item">
+            <div class="feature-icon">04</div>
+            <div>
+                <h3>Event management</h3>
+                <p>
+                    Organisers can manage events, participants
+                    and race results from one platform.
+                </p>
+            </div>
+            <span class="feature-arrow">↗</span>
+        </div>
+    </div>
+</section>
+
+<section class="closing-section">
+    <div class="closing-content">
+        <span class="section-eyebrow">YOUR JOURNEY STARTS NOW</span>
+        <h2>Don't just watch.<br />Be part of it.</h2>
+        <p>
+            Find an event, take on a challenge and make
+            your next race day count.
+        </p>
+
+        <a asp-controller="Events" asp-action="Index"
+           class="btn-dark-custom">
+            Find your next event <span>↗</span>
+        </a>
+    </div>
+
+    <div class="closing-decoration">RD.</div>
+</section>
