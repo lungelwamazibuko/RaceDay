@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
 
 using RaceDay.Data;
 
@@ -11,7 +13,7 @@ public enum EventType
     Cycle
 }
 
-public class Event
+public partial class Event
 {
     public int Id { get; set; }
 
@@ -43,4 +45,10 @@ public class Event
     public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
     public string? BannerBlobName { get; internal set; }
     public string? BannerImageUrl { get; internal set; }
+
+    [NotMapped]
+    public IFormFile? bannerFile { get; set; }
+
+    [NotMapped]
+    public bool removeBanner { get; set; }
 }
