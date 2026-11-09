@@ -4,12 +4,24 @@
 <h1 class="h3">Add category to @ViewBag.EventName</h1>
 <hr />
 <div class="row"><div class="col-md-6">
-    <form asp-action="Create">
+    <form asp-controller="Categories"
+          asp-action="Create"
+          method="post">
+        @Html.AntiForgeryToken()
+
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
         <input type="hidden" asp-for="EventId" />
+
         <partial name="_CategoryForm" model="Model" />
+
         <button type="submit" class="btn btn-primary">Add</button>
-        <a asp-action="Index" asp-route-eventId="@Model.EventId" class="btn btn-outline-secondary">Cancel</a>
+
+        <a asp-action="Index"
+           asp-route-eventId="@Model.EventId"
+           class="btn btn-outline-secondary">
+            Cancel
+        </a>
     </form>
 </div></div>
 
