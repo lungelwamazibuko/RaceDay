@@ -4,11 +4,18 @@
     ViewData["Title"] = Model.Name;
     bool isOwner = ViewBag.IsOwner == true;
     bool isEnrolled = ViewBag.IsEnrolled == true;
-}
+} 
 
 <partial name="_Alerts" />
 
 <h1 class="h3">@Model.Name</h1>
+@if (!string.IsNullOrEmpty(Model.BannerImageUrl))
+{
+    <img src="@Model.BannerImageUrl" alt="Banner for @Model.Name" class="img-fluid w-100 mb-3" 
+    style="max-height:320px;object-fit:cover" />
+}
+
+
 <p class="text-muted">@Model.EventType &middot; @Model.DistanceKm.ToString("0.##") km</p>
 
 <dl class="row">
