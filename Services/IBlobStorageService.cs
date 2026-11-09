@@ -1,12 +1,18 @@
-﻿namespace RaceDay.Services
+﻿using Microsoft.AspNetCore.Http;
+
+namespace RaceDay.Services;
+
+public record BlobUploadResult(string BlobName, string Url);
+
+public interface IBlobStorageService
 {
-    public record BlobUploadResult(string BlobName, string Url);
-    public interface IBlobStorageService
-    {
-        string? Validate(IFormFile file);
+    string? Validate(IFormFile file);
 
-        Task<BlobUploadResult> UploadBannerAsync(IFormFile file,  CancellationToken ct = default);
+    Task<BlobUploadResult> UploadBannerAsync(
+        IFormFile file,
+        CancellationToken ct = default);
 
-        Task DeleteAsync(string? blobName, CancellationToken ct = default);
-    }
+    Task DeleteAsync(
+        string? blobName,
+        CancellationToken ct = default);
 }
