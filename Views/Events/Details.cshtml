@@ -24,9 +24,11 @@
     <dd class="col-sm-10">
         @if (Model.Categories.Any())
         {
-            @foreach (var c in Model.Categories.OrderBy(c => c.Kind).ThenBy(c => c.Name))
+            @foreach (var c in Model.Categories
+                .OrderBy(c => c.Kind)
+                .ThenBy(c => c.Name))
             {
-                <span class="badge text-bg-secondary me-1">@c.Name</span>
+                <span class="me-2">@c.Name</span>
             }
         }
         else
