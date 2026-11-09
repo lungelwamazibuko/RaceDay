@@ -13,7 +13,7 @@ public enum EventType
     Cycle
 }
 
-public partial class Event
+public class Event
 {
     public int Id { get; set; }
 
@@ -36,6 +36,11 @@ public partial class Event
 
     [Display(Name = "Event type")]
     public EventType EventType { get; set; }
+    [StringLength(200)]
+    public string? BannerBlobName { get; set; }
+    [StringLength(500)]
+    [Display(Name = "Banner image")]
+    public string? BannerImageUrl { get; set; }
 
     // The organiser who owns this event
     public string OrganiserId { get; set; } = string.Empty;
@@ -43,12 +48,5 @@ public partial class Event
 
     public ICollection<Category> Categories { get; set; } = new List<Category>();
     public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
-    public string? BannerBlobName { get; internal set; }
-    public string? BannerImageUrl { get; internal set; }
-
-    [NotMapped]
-    public IFormFile? bannerFile { get; set; }
-
-    [NotMapped]
-    public bool removeBanner { get; set; }
+    
 }
