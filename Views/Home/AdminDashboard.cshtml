@@ -1,8 +1,91 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
 }
 
+<div class="dashboard-page">
+    <section class="dashboard-header">
+        <div>
+            <span class="dashboard-eyebrow">RACEDAY ADMINISTRATION</span>
+            <h1>System overview.</h1>
+            <p>Manage users, oversee events and monitor the RaceDay platform.</p>
+        </div>
+        <a asp-controller="UserRoles" asp-action="Index" class="dashboard-primary-btn">
+            Manage users <span>→</span>
+        </a>
+    </section>
 
-<h1>Hello this is the dashboard view</h1>
+    <section class="dashboard-stats">
+        <div class="dashboard-stat-card">
+            <div class="stat-icon orange">👥</div>
+            <div>
+                <span class="stat-label">Registered users</span>
+                <h2>--</h2>
+                <span class="stat-description">Platform accounts</span>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+            <div class="stat-icon blue">🏁</div>
+            <div>
+                <span class="stat-label">Total events</span>
+                <h2>--</h2>
+                <span class="stat-description">Events on RaceDay</span>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+            <div class="stat-icon green">📋</div>
+            <div>
+                <span class="stat-label">Registrations</span>
+                <h2>--</h2>
+                <span class="stat-description">Participant enrolments</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-content">
+        <div class="dashboard-section-heading">
+            <div>
+                <h2>Administration</h2>
+                <p>Manage the main areas of the RaceDay platform.</p>
+            </div>
+        </div>
+
+        <div class="dashboard-actions">
+            <a asp-controller="UserRoles" asp-action="Index" class="dashboard-action-card">
+                <div class="action-icon">👤</div>
+                <div>
+                    <h3>User management</h3>
+                    <p>View users and manage their system roles and access.</p>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a asp-controller="Events" asp-action="Index" class="dashboard-action-card">
+                <div class="action-icon">🏃</div>
+                <div>
+                    <h3>Event management</h3>
+                    <p>View and oversee events created on the platform.</p>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a asp-controller="Results" asp-action="Index" class="dashboard-action-card">
+                <div class="action-icon">📊</div>
+                <div>
+                    <h3>Race results</h3>
+                    <p>Access race results and participant performance records.</p>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="dashboard-notice">
+        <div class="notice-icon">i</div>
+        <div>
+            <h3>Platform administration</h3>
+            <p>Ensure user accounts have the correct roles and permissions. Monitor event activity to maintain reliable platform operations.</p>
+        </div>
+    </section>
+</div>
