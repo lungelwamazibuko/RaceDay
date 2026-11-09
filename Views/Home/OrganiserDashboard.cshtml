@@ -1,7 +1,94 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Organiser Dashboard";
 }
 
-<h1>Welcome to the organiser dashboard!!</h1>
+<div class="dashboard-page">
+    <section class="dashboard-header">
+        <div>
+            <span class="dashboard-eyebrow">RACEDAY ORGANISER</span>
+            <h1>Good day, Organiser.</h1>
+            <p>Manage your events, monitor registrations and keep race day running smoothly.</p>
+        </div>
+        <a asp-controller="Events" asp-action="Create" class="dashboard-primary-btn">
+            <span>+</span> Create event
+        </a>
+    </section>
+
+    <section class="dashboard-stats">
+        <div class="dashboard-stat-card">
+            <div class="stat-icon orange">🏁</div>
+            <div>
+                <span class="stat-label">My events</span>
+                <h2>--</h2>
+                <span class="stat-description">Events organised</span>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+            <div class="stat-icon blue">👥</div>
+            <div>
+                <span class="stat-label">Participants</span>
+                <h2>--</h2>
+                <span class="stat-description">Total registrations</span>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-card">
+            <div class="stat-icon green">📅</div>
+            <div>
+                <span class="stat-label">Upcoming events</span>
+                <h2>--</h2>
+                <span class="stat-description">Scheduled races</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-content">
+        <div class="dashboard-section-heading">
+            <div>
+                <h2>Event management</h2>
+                <p>Everything you need to organise your races.</p>
+            </div>
+            <a asp-controller="Events" asp-action="Index" class="dashboard-text-link">
+                View all events →
+            </a>
+        </div>
+
+        <div class="dashboard-actions">
+            <a asp-controller="Events" asp-action="Create" class="dashboard-action-card">
+                <div class="action-icon">＋</div>
+                <div>
+                    <h3>Create an event</h3>
+                    <p>Set up a new running, walking or cycling event.</p>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a asp-controller="Events" asp-action="Index" class="dashboard-action-card">
+                <div class="action-icon">🏃</div>
+                <div>
+                    <h3>Manage events</h3>
+                    <p>View and update your existing events.</p>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+
+            <a asp-controller="Results" asp-action="Index" class="dashboard-action-card">
+                <div class="action-icon">📊</div>
+                <div>
+                    <h3>Capture results</h3>
+                    <p>Record race times and participant results.</p>
+                </div>
+                <span class="action-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="dashboard-notice">
+        <div class="notice-icon">i</div>
+        <div>
+            <h3>Ready for race day?</h3>
+            <p>Keep your event information, participant registrations and results up to date to ensure a smooth experience.</p>
+        </div>
+    </section>
+</div>
