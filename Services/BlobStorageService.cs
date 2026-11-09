@@ -12,15 +12,15 @@ namespace RaceDay.Services
             [".jpg"] = "image/jpeg",
             [".jpeg"] = "image/jpeg",
             [".png"] = "image/png",
-            [".gif"] = "image/gif"
+            [".webp"] = "image/webp"
         };
 
         private readonly BlobContainerClient _container;
 
         public BlobStorageService(IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("BlobStorage");
-            var containerName = config["BlobContainerName"] ?? "event-banners";
+            var connectionString = config["AzureStorage:ConnectionString"];
+            var containerName = config["AzureStorage:ContainerName"] ?? "event-banners";
 
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new InvalidOperationException("AzureStorage:ConnectionString is not configured.");
@@ -45,7 +45,7 @@ namespace RaceDay.Services
             var ext = Path.GetExtension(file.FileName);
             if (!AllowedTypes.TryGetValue(ext, out var expectedType) || !string.Equals(file.ContentType, expectedType, StringComparison.OrdinalIgnoreCase))
             {
-                return "The banner must be a valid image file (jpg, jpeg, png, gif).";
+                return "The banner must be a valid image file (jpg, jpeg, png, webp).";
             }
 
             using var stream = file.OpenReadStream();
@@ -55,27 +55,32 @@ namespace RaceDay.Services
 
             var valid = expectedType switch
             {
-                "image/jpeg" => h[0] == 0xFF && h[1] == 0xD8 && h[2] == 0xFF,
+                "image/jpeg" => h[0] == 0xFF && h[1] == 0xD8,
                 "image/png" => h[0] == 0x89 && h[1] == 0x50 && h[2] == 0x4E && h[3] == 0x47,
-                "image/gif" => h[0] == 0x47 && h[1] == 0x49 && h[2] == 0x46 && h[3] == 0x38,
+                "image/webp" => h[0] == 0x52 && h[1] == 0x49 && h[2] == 0x46 && h[3] == 0x46 &&
+                                h[8] == 0x57 && h[9] == 0x45 && h[10] == 0x42 && h[11] == 0x50,
                 _ => false
             };
             return valid ? null : "That file doesn't look like a valid image.";
+
         }
-        public async Task<BlobUploadResult> UploadFileAsync(IFormFile file, CancellationToken ct = default)
+        public async Task<BlobUploadResult> UploadBannerAsync( IFormFile file, CancellationToken ct = default)
         {
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             var blobName = $"banners/{Guid.NewGuid():N}{ext}";
             var blob = _container.GetBlobClient(blobName);
+
             await using var stream = file.OpenReadStream();
+
             await blob.UploadAsync(stream, new BlobUploadOptions
             {
                 HttpHeaders = new BlobHttpHeaders
                 {
                     ContentType = AllowedTypes[ext],
-                    CacheControl = "public, max-age=31536000" // 1 year
+                    CacheControl = "public, max-age=31536000"
                 }
             }, ct);
+
             return new BlobUploadResult(blobName, blob.Uri.ToString());
         }
         public async Task DeleteAsync(string? blobName, CancellationToken ct = default)
