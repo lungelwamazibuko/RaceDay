@@ -41,4 +41,6 @@ public class Event
 
     public ICollection<Category> Categories { get; set; } = new List<Category>();
     public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
+    public string? BannerBlobName { get; internal set; }
+    public string? BannerImageUrl { get; internal set; }
 }

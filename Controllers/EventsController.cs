@@ -182,11 +182,10 @@ public class EventsController : Controller
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        var blobName = ev.BannerBlobName
+        var blobName = ev.BannerBlobName;
         _db.Events.Remove(ev);   // categories are cascade-deleted
         await _db.SaveChangesAsync();
         await _blobs.DeleteAsync(blobName);
-
         TempData["Success"] = "Event deleted.";
         return RedirectToAction(nameof(Index));
     }
